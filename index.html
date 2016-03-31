@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<!-- Decir que un input file es 'multiple', es darle -->
+	<!-- la capacidad de recibir 1 o mas archivos a la vez -->
+
+	<input type="file" multiple id="files">
+	
+	<button onclick="sendFiles()">SEND FILES</button>
+
+	<script>
+
+		function $ (id) {
+			return document.getElementById(id);
+		}
+
+		function sendFiles() {
+			var xhr = new XMLHttpRequest();
+
+			var formData = new FormData();
+			var files = $("files").files;
+
+			for (var i = 0; i < files.length; i++) {
+			  var file = files[i];
+			  
+			  // Siempre que se desee enviar un grupo de archivos
+			  // que pertenezcan a la misma variable
+			  // esta debe llevar en el identificador
+			  // los corchetes [], asi el servidor
+			  // asume que puede recibir 1 o mas 
+			  // archivos utilizando
+			  // una sola variable
+			  formData.append('photos[]', file, file.name);
+			}
+
+			xhr.open("POST", "./api/upload_files.php", true);
+
+			// Cuando se desea enviar informacion al servidor
+			// utilizando el objeto FormData, no hace falta
+			// especificar ningun Content-Type, el 
+			// asume por defecto que se esta
+			// enviando un multipart/form-data
+			xhr.send(formData);
+		}
+	</script>
+</body>
+</html>
